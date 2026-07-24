@@ -1,0 +1,15 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 321674436692.dkr.ecr.us-east-1.amazonaws.com
+
+  build:
+    commands:
+      - docker build -t coworking ./analytics
+      - docker tag coworking:latest 321674436692.dkr.ecr.us-east-1.amazonaws.com/coworking:$CODEBUILD_BUILD_NUMBER
+
+  post_build:
+    commands:
+      - docker push 321674436692.dkr.ecr.us-east-1.amazonaws.com/coworking:$CODEBUILD_BUILD_NUMBER
